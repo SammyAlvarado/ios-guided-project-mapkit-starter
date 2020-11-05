@@ -35,6 +35,18 @@ class EarthquakesViewController: UIViewController {
         fetchQuakes()
     }
     
+    var quakes: [Quake] = [] {
+        didSet {
+            let oldQuakes = Set(oldValue)
+            let newQuakes = Set(quakes)
+            let addedQuakes = newQuakes.subtracting(oldQuakes)
+            let removedQuakes = oldQuakes.subtracting(newQuakes)
+            mapView.removeAnnotations(Array(removedQuakes))
+            mapView.addAnnotations(Array(addedQuakes))
+        }
+    }
+    
+    
     private func fetchQuakes() {
         let visableRegion = mapView.visibleMapRect
         
@@ -43,7 +55,7 @@ class EarthquakesViewController: UIViewController {
                 NSLog("%@", "Error fetching quakes: \(error)")
             }
             
-            print(quakes)
+            self.quakes = quakes ?? []
         }
     }
 }
