@@ -47,22 +47,27 @@ class EarthquakesViewController: UIViewController {
     }
 
     private var isCurrentlyFetchingQuakes = false
-    
+    private var shouldRequestQuakesAgain = false
     private func fetchQuakes() {
+        /// If we were already requesting quakes…
         guard !isCurrentlyFetchingQuakes else {
+            /// … then we want to "remember" to refresh once the busy request finishes
+            shouldRequestQuakesAgain = true
             return
         }
-        
-        
-        let visableRegion = mapView.visibleMapRect
-        
-        quakeFetcher.fetchQuakes(in: visableRegion) { quakes,error in
+        isCurrentlyFetchingQuakes = true
+        let visibleRegion = mapView.visibleMapRect
+        quakeFetcher.fetchQuakes(in: visibleRegion) { quakes, error in
             self.isCurrentlyFetchingQuakes = false
-            
+            defer {
+                if self.shouldRequestQuakesAgain {
+                    self.shouldRequestQuakesAgain = false
+                    self.fetchQuakes()
+                }
+            }
             if let error = error {
                 NSLog("%@", "Error fetching quakes: \(error)")
             }
-            
             self.quakes = quakes ?? []
         }
     }
