@@ -13,9 +13,13 @@ class EarthquakesViewController: UIViewController {
     
     @IBOutlet var mapView: MKMapView!
     private var userTrackingButton: MKUserTrackingButton!
+    
+    private let locationManager = CLLocationManager()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        locationManager.requestWhenInUseAuthorization()
         
         userTrackingButton = MKUserTrackingButton(mapView: mapView)
         userTrackingButton.translatesAutoresizingMaskIntoConstraints = false
