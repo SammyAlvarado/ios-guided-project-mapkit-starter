@@ -12,9 +12,20 @@ import MapKit
 class EarthquakesViewController: UIViewController {
     
     @IBOutlet var mapView: MKMapView!
+    private var userTrackingButton: MKUserTrackingButton!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        userTrackingButton = MKUserTrackingButton(mapView: mapView)
+        userTrackingButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(userTrackingButton)
+        
+        NSLayoutConstraint.activate([
+            userTrackingButton.leadingAnchor.constraint(equalTo: mapView.leadingAnchor, constant: 20),
+            mapView.bottomAnchor.constraint(equalTo: userTrackingButton.bottomAnchor,constant: 20)
+        ])
+        
     }
 }
+
