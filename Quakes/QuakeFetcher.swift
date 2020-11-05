@@ -46,7 +46,7 @@ class QuakeFetcher {
 		}
 		
 		let interval = DateInterval(start: startDate, end: endDate)
-		fetchQuakes(from: interval, completion: completion)
+		fetchQuakes(from: interval, in: region, completion: completion)
 	}
 	
 	func fetchQuakes(from dateInterval: DateInterval,
@@ -100,15 +100,25 @@ class QuakeFetcher {
 			
 			print(data)
 			
-			do {
-				let decoder = JSONDecoder()
-				decoder.dateDecodingStrategy = .millisecondsSince1970
-				
-//				let quakeResults =
-				
+//			do {
+//				let decoder = JSONDecoder()
+//				decoder.dateDecodingStrategy = .millisecondsSince1970
+//
+////				let quakeResults =
+//
+//                DispatchQueue.main.async {
+////                    completion(<# quakeResults #>, nil)
+//                }
+            
+            do {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .millisecondsSince1970
+                let quakeResults = try decoder.decode(QuakeResults.self, from: data)
+                
                 DispatchQueue.main.async {
-//                    completion(<# quakeResults #>, nil)
+                    completion(quakeResults.features, nil)
                 }
+                    
 				
 			} catch {
 				print("Decoding error: \(error)")
