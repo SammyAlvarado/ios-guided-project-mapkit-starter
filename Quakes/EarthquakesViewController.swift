@@ -45,12 +45,20 @@ class EarthquakesViewController: UIViewController {
             mapView.addAnnotations(Array(addedQuakes))
         }
     }
-    
+
+    private var isCurrentlyFetchingQuakes = false
     
     private func fetchQuakes() {
+        guard !isCurrentlyFetchingQuakes else {
+            return
+        }
+        
+        
         let visableRegion = mapView.visibleMapRect
         
         quakeFetcher.fetchQuakes(in: visableRegion) { quakes,error in
+            self.isCurrentlyFetchingQuakes = false
+            
             if let error = error {
                 NSLog("%@", "Error fetching quakes: \(error)")
             }
